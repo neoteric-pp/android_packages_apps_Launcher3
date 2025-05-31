@@ -254,9 +254,11 @@ public class BaseDepthController {
             return false;
         }
         StateManager<LauncherState, Launcher> stateManager = mLauncher.getStateManager();
+        LauncherState targetState = stateManager.getTargetState() != null
+                ? stateManager.getTargetState() : stateManager.getState();
         // Only blur workspace if the current state wants to blur based on the target state.
         boolean shouldBlurWorkspace =
-                stateManager.getCurrentStableState().shouldBlurWorkspace(stateManager.getState());
+                stateManager.getCurrentStableState().shouldBlurWorkspace(targetState);
         // If blur is not desired, apply 0 blur to force reset.
         int blurRadius = shouldBlurWorkspace ? mCurrentBlur : 0;
         RenderEffect blurEffect =
