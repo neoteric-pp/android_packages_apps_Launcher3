@@ -303,11 +303,6 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
         super.onFinishInflate();
         if (Utilities.showSearch(getContext())) {
             mSearchContainer.setVisibility(View.VISIBLE);
-            if (!ThemeManager.INSTANCE.get(mContext).isMonoThemeEnabled()) {
-                getSearchView().setBackgroundResource(R.drawable.bg_all_apps_searchbox_google);
-            } else {
-                getSearchView().setBackgroundResource(R.drawable.bg_all_apps_searchbox_google_themed);
-            }
         } else {
             mSearchContainer.setVisibility(View.GONE);
         }
@@ -829,11 +824,6 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
             mTabsProtectionAlpha = tabsAlpha;
             invalidateHeader();
         }
-        if (!ThemeManager.INSTANCE.get(mContext).isMonoThemeEnabled()) {
-            getSearchView().setBackgroundResource(R.drawable.bg_all_apps_searchbox_google);
-        } else {
-            getSearchView().setBackgroundResource(R.drawable.bg_all_apps_searchbox_google_themed);
-        }
         if (mSearchUiManager.getEditText() == null) {
             return;
         }
@@ -1201,7 +1191,43 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
                 topPadding += getResources().getDimensionPixelSize(
                         R.dimen.all_apps_additional_top_padding_floating_search);
             }
-            setPadding(grid.allAppsLeftRightMargin, topPadding, grid.allAppsLeftRightMargin, 0);
+            int additionalMargin = getResources().getDimensionPixelSize(
+                    R.dimen.all_apps_additional_horizontal_margin);
+            int horizontalMargin = grid.allAppsLeftRightMargin + additionalMargin;
+            setPadding(horizontalMargin, topPadding, horizontalMargin, 0);
+
+            // Adjust fast scroller margins to compensate for container padding so they stay at edge
+            if (mFastScroller != null) {
+                RelativeLayout.LayoutParams scrollerParams =
+                        (RelativeLayout.LayoutParams) mFastScroller.getLayoutParams();
+                int baseMargin = getResources().getDimensionPixelSize(R.dimen.fastscroll_end_margin);
+                scrollerParams.setMarginEnd(baseMargin - additionalMargin);
+                mFastScroller.setLayoutParams(scrollerParams);
+            }
+            View fastScrollerPopup = findViewById(R.id.fast_scroller_popup);
+            if (fastScrollerPopup != null) {
+                RelativeLayout.LayoutParams popupParams =
+                        (RelativeLayout.LayoutParams) fastScrollerPopup.getLayoutParams();
+                int baseMargin = getResources().getDimensionPixelSize(R.dimen.fastscroll_popup_margin);
+                popupParams.setMarginEnd(baseMargin - additionalMargin);
+                fastScrollerPopup.setLayoutParams(popupParams);
+            }
+            if (mFastScrollLetterLayout != null) {
+                RelativeLayout.LayoutParams letterParams =
+                        (RelativeLayout.LayoutParams) mFastScrollLetterLayout.getLayoutParams();
+                int baseMargin = getResources().getDimensionPixelSize(
+                        R.dimen.fastscroll_list_letter_end_margin);
+                letterParams.setMarginEnd(baseMargin - additionalMargin);
+                mFastScrollLetterLayout.setLayoutParams(letterParams);
+            }
+            // Set search bar margins to match drawer icons
+            if (mSearchContainer != null) {
+                ViewGroup.MarginLayoutParams searchParams =
+                        (ViewGroup.MarginLayoutParams) mSearchContainer.getLayoutParams();
+                searchParams.setMarginStart(horizontalMargin);
+                searchParams.setMarginEnd(horizontalMargin);
+                mSearchContainer.setLayoutParams(searchParams);
+            }
         }
         InsettableFrameLayout.dispatchInsets(this, insets);
     }
