@@ -15,55 +15,38 @@
  */
 package com.android.launcher3.allapps.search;
 
-import static android.view.View.MeasureSpec.EXACTLY;
-import static android.view.View.MeasureSpec.getSize;
-import static android.view.View.MeasureSpec.makeMeasureSpec;
-
-import static com.android.launcher3.Utilities.prefixTextWithIcon;
-import static com.android.launcher3.icons.IconNormalizer.ICON_VISIBLE_AREA_FACTOR;
-
 import android.content.Context;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.text.Selection;
 import android.text.SpannableStringBuilder;
 import android.text.method.TextKeyListener;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
 
-import com.android.launcher3.DeviceProfile;
 import com.android.launcher3.ExtendedEditText;
 import com.android.launcher3.Insettable;
-import com.android.launcher3.R;
-import com.android.launcher3.Utilities;
 import com.android.launcher3.allapps.ActivityAllAppsContainerView;
 import com.android.launcher3.allapps.AllAppsStore;
 import com.android.launcher3.allapps.BaseAllAppsAdapter.AdapterItem;
 import com.android.launcher3.allapps.SearchUiManager;
-import com.android.launcher3.graphics.ThemeManager;
 import com.android.launcher3.search.SearchCallback;
 import com.android.launcher3.views.ActivityContext;
 
 import java.util.ArrayList;
 
 /**
- * Layout to contain the All-apps search UI.
+ * EditText for the All-apps search UI.
  */
 public class AppsSearchContainerLayout extends ExtendedEditText
         implements SearchUiManager, SearchCallback<AdapterItem>,
         AllAppsStore.OnUpdateListener, Insettable {
 
-    private final ActivityContext mLauncher;
     private final AllAppsSearchBarController mSearchBarController;
     private final SpannableStringBuilder mSearchQueryBuilder;
-    private final ThemeManager mThemeManager;
 
     private ActivityAllAppsContainerView<?> mAppsView;
-
-    // The amount of pixels to shift down and overlap with the rest of the content.
-    private final int mContentOverlap;
+    private ActivityContext mLauncher;
 
     public AppsSearchContainerLayout(Context context) {
         this(context, null);
@@ -76,92 +59,29 @@ public class AppsSearchContainerLayout extends ExtendedEditText
     public AppsSearchContainerLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        mLauncher = ActivityContext.lookupContext(context);
         mSearchBarController = new AllAppsSearchBarController();
-        mThemeManager = ThemeManager.INSTANCE.get(context);
-
         mSearchQueryBuilder = new SpannableStringBuilder();
         Selection.setSelection(mSearchQueryBuilder, 0);
-
-        mContentOverlap =
-                getResources().getDimensionPixelSize(R.dimen.all_apps_search_bar_content_overlap);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if(mAppsView != null)
+        if (mAppsView != null)
             mAppsView.getAppsStore().addUpdateListener(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if(mAppsView != null)
+        if (mAppsView != null)
             mAppsView.getAppsStore().removeUpdateListener(this);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // Update the width to match the grid padding
-        DeviceProfile dp = mLauncher.getDeviceProfile();
-        int myRequestedWidth = getSize(widthMeasureSpec);
-        int rowWidth = myRequestedWidth - mAppsView.getActiveRecyclerView().getPaddingLeft()
-                - mAppsView.getActiveRecyclerView().getPaddingRight();
-
-        int cellWidth = DeviceProfile.calculateCellWidth(rowWidth,
-                dp.cellLayoutBorderSpacePx.x, dp.numShownHotseatIcons);
-        int iconVisibleSize = Math.round(ICON_VISIBLE_AREA_FACTOR * dp.iconSizePx);
-        int iconPadding = cellWidth - iconVisibleSize;
-
-        int myWidth = rowWidth - iconPadding + getPaddingLeft() + getPaddingRight();
-        super.onMeasure(makeMeasureSpec(myWidth, EXACTLY), heightMeasureSpec);
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-
-        // Shift the widget horizontally so that its centered in the parent (b/63428078)
-        View parent = (View) getParent();
-        int availableWidth = parent.getWidth() - parent.getPaddingLeft() - parent.getPaddingRight();
-        int myWidth = right - left;
-        int expectedLeft = parent.getPaddingLeft() + (availableWidth - myWidth) / 2;
-        int shift = expectedLeft - left;
-        setTranslationX(shift);
-
-        // Update search icon and background based on theme and GSA availability
-        updateSearchAppearance();
-
-        offsetTopAndBottom(mContentOverlap);
-    }
-
-    private void updateSearchAppearance() {
-        Context context = getContext();
-        boolean isGSAEnabled = Utilities.isGSAEnabled(context);
-        boolean isThemedIcons = mThemeManager.isMonoThemeEnabled();
-
-        // Update search icon - use Google icon if GSA is available
-        Drawable icon;
-        if (isGSAEnabled) {
-            icon = context.getDrawable(isThemedIcons ?
-                    R.drawable.ic_super_g_themed : R.drawable.ic_super_g_color);
-        } else {
-            icon = context.getDrawable(R.drawable.ic_allapps_search);
-        }
-        setCompoundDrawablesRelativeWithIntrinsicBounds(icon, null, null, null);
-
-        // Update background based on theme
-        if (isGSAEnabled) {
-            setBackgroundResource(isThemedIcons ?
-                    R.drawable.bg_all_apps_searchbox_google_themed :
-                    R.drawable.bg_all_apps_searchbox_google);
-        }
     }
 
     @Override
     public void initializeSearch(ActivityAllAppsContainerView<?> appsView) {
         mAppsView = appsView;
+        mLauncher = ActivityContext.lookupContext(getContext());
         mSearchBarController.initialize(
                 new DefaultAppSearchAlgorithm(getContext(), true),
                 this, mLauncher, this);

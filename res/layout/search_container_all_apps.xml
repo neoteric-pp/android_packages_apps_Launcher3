@@ -13,30 +13,93 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<com.android.launcher3.allapps.search.AppsSearchContainerLayout
+<com.android.launcher3.allapps.search.AllAppsSearchBarLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@id/search_container_all_apps"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/all_apps_search_bar_field_height"
+    android:layout_height="@dimen/qsb_widget_height"
     android:layout_centerHorizontal="true"
     android:layout_gravity="top|center_horizontal"
-    android:background="@drawable/bg_all_apps_searchbox"
-    android:focusableInTouchMode="true"
-    android:gravity="center_vertical"
-    android:hint="@string/all_apps_search_bar_hint"
-    android:imeOptions="actionSearch|flagNoExtractUi"
-    android:importantForAutofill="no"
-    android:inputType="text|textNoSuggestions|textCapWords"
-    android:maxLines="1"
-    android:paddingVertical="12dp"
-    android:paddingStart="20dp"
-    android:layout_marginStart="12dp"
-    android:layout_marginEnd="12dp"
-    android:drawablePadding="16dp"
-    android:drawableStart="@drawable/ic_allapps_search"
-    android:saveEnabled="false"
-    android:scrollHorizontally="true"
-    android:singleLine="true"
-    android:textColor="?android:attr/textColorSecondary"
-    android:textColorHint="@drawable/all_apps_search_hint"
-    android:textSize="16sp" />
+    android:paddingVertical="@dimen/qsb_widget_vertical_padding">
+
+    <RelativeLayout
+        android:id="@+id/search_box_inner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_all_apps_searchbox_google"
+        android:foreground="?android:attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/search_box_g_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/qsb_g_icon_marginStart"
+            android:src="@drawable/ic_super_g_color" />
+
+        <LinearLayout
+            android:id="@+id/search_box_icons"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:paddingStart="6dp"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            tools:ignore="RtlSymmetry">
+
+            <com.android.launcher3.qsb.AssistantIconView
+                android:id="@+id/search_box_mic_icon"
+                android:layout_width="@dimen/qsb_icon_width"
+                android:layout_height="match_parent"
+                android:layout_marginStart="-6dp"
+                android:background="@drawable/pill_ripple"
+                android:clickable="true"
+                android:contentDescription="@string/label_voice_search"
+                android:scaleType="fitCenter"
+                android:focusable="false"
+                android:padding="@dimen/qsb_icon_padding"
+                tools:src="@drawable/ic_mic_color" />
+
+            <ImageButton
+                android:id="@+id/search_box_lens_icon"
+                android:layout_width="@dimen/qsb_icon_width"
+                android:layout_height="match_parent"
+                android:layout_marginStart="-6dp"
+                android:background="@drawable/pill_ripple"
+                android:clickable="true"
+                android:contentDescription="@string/label_lens"
+                android:focusable="false"
+                android:padding="@dimen/qsb_icon_padding"
+                android:scaleType="fitCenter"
+                android:visibility="gone"
+                tools:src="@drawable/ic_lens_color"
+                tools:visibility="visible" />
+        </LinearLayout>
+
+        <com.android.launcher3.allapps.search.AppsSearchContainerLayout
+            android:id="@+id/search_box_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/search_box_g_icon"
+            android:layout_toStartOf="@id/search_box_icons"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@null"
+            android:focusableInTouchMode="true"
+            android:gravity="center_vertical"
+            android:hint="@string/all_apps_search_bar_hint"
+            android:imeOptions="actionSearch|flagNoExtractUi"
+            android:importantForAutofill="no"
+            android:inputType="text|textNoSuggestions|textCapWords"
+            android:maxLines="1"
+            android:saveEnabled="false"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textColorHint="@drawable/all_apps_search_hint"
+            android:textSize="16sp" />
+    </RelativeLayout>
+</com.android.launcher3.allapps.search.AllAppsSearchBarLayout>
