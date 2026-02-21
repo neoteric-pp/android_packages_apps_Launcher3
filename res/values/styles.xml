@@ -40,7 +40,7 @@
     <style name="LauncherTheme" parent="@style/DynamicColorsBaseLauncherTheme">
         <item name="android:textColorSecondary">#DE000000</item>
         <item name="allAppsScrimColor">@*android:color/system_neutral2_50</item>
-        <item name="allAppsScrimColorOverBlur">#4DFFFFFF</item>
+        <item name="allAppsScrimColorOverBlur">@color/scrim_over_blur</item>
         <item name="allappsHeaderProtectionColor">@*android:color/transparent</item>
         <item name="searchHintHighlight">@*android:color/system_neutral1_800</item>
         <item name="allAppsNavBarScrimColor">#66FFFFFF</item>
@@ -79,7 +79,7 @@
         <item name="dropTargetHoverTextColor">@color/drop_target_hover_text_color_light</item>
         <item name="dropTargetHoverButtonColor">@color/drop_target_hover_button_color_light</item>
         <item name="overviewScrimColor">@color/overview_scrim</item>
-        <item name="overviewScrimColorOverBlur">#4DFFFFFF</item>
+        <item name="overviewScrimColorOverBlur">@color/scrim_over_blur</item>
         <item name="preloadIconAccentColor">@color/preload_icon_accent_color_light</item>
         <item name="preloadIconBackgroundColor">@color/preload_icon_background_color_light</item>
         <item name="android:windowTranslucentStatus">false</item>
@@ -118,7 +118,7 @@
         <item name="android:colorControlHighlight">#19FFFFFF</item>
         <item name="android:colorPrimary">#FF212121</item>
         <item name="allAppsScrimColor">@*android:color/system_neutral2_900</item>
-        <item name="allAppsScrimColorOverBlur">#33FFFFFF</item>
+        <item name="allAppsScrimColorOverBlur">@color/scrim_over_blur</item>
         <item name="allappsHeaderProtectionColor">@*android:color/transparent</item>
         <item name="searchHintHighlight">@*android:color/system_accent1_100</item>
         <item name="allAppsNavBarScrimColor">#80000000</item>
@@ -146,7 +146,7 @@
         <item name="iconOnlyShortcutColor">#B3FFFFFF</item>
         <item name="eduHalfSheetBGColor">#DD000000</item>
         <item name="overviewScrimColor">@color/overview_scrim_dark</item>
-        <item name="overviewScrimColorOverBlur">#33FFFFFF</item>
+        <item name="overviewScrimColorOverBlur">@color/scrim_over_blur</item>
         <item name="preloadIconAccentColor">@color/preload_icon_accent_color_dark</item>
         <item name="preloadIconBackgroundColor">@color/preload_icon_background_color_dark</item>
     </style>

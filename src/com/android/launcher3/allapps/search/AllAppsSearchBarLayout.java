@@ -30,6 +30,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.android.launcher3.ExtendedEditText;
+import com.android.launcher3.Flags;
 import com.android.launcher3.Insettable;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
@@ -80,10 +81,17 @@ public class AllAppsSearchBarLayout extends FrameLayout implements SearchUiManag
         boolean isThemedIcons = themeManager.isMonoThemeEnabled();
         boolean isMusicSearch = Utilities.isMusicSearchEnabled(context);
 
-        // Update background based on theme
-        mInner.setBackgroundResource(isThemedIcons ?
-                R.drawable.bg_all_apps_searchbox_google_themed :
-                R.drawable.bg_all_apps_searchbox_google);
+        // Update background based on theme and blur setting
+        if (Flags.allAppsBlur()) {
+            mInner.setBackgroundResource(R.drawable.bg_all_apps_searchbox_blur);
+            // Use a solid hint color that contrasts well with frosty overlay
+            boolean isDark = Utilities.isDarkTheme(context);
+            mSearchInput.setHintTextColor(isDark ? 0xB3FFFFFF : 0x99000000);
+        } else {
+            mInner.setBackgroundResource(isThemedIcons ?
+                    R.drawable.bg_all_apps_searchbox_google_themed :
+                    R.drawable.bg_all_apps_searchbox_google);
+        }
 
         // Update Google icon
         ImageView gIcon = findViewById(R.id.search_box_g_icon);
