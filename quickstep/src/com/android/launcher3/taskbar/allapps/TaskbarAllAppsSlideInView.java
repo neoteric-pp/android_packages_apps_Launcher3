@@ -249,11 +249,11 @@ public class TaskbarAllAppsSlideInView extends AbstractSlideInView<TaskbarOverla
 
     @Override
     protected int getScrimColor(Context context) {
-        if (!mActivityContext.getDeviceProfile().shouldShowAllAppsOnSheet()) {
-            return Themes.getAttrColor(context, R.attr.allAppsScrimColor);
-        }
         if (Flags.allAppsBlur()) {
             return Themes.getAttrColor(context, R.attr.allAppsScrimColorOverBlur);
+        }
+        if (!mActivityContext.getDeviceProfile().shouldShowAllAppsOnSheet()) {
+            return Themes.getAttrColor(context, R.attr.allAppsScrimColor);
         }
         return context.getResources().getColor(R.color.widgets_picker_scrim);
     }
